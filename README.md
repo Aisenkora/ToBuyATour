@@ -31,8 +31,16 @@ docker compose up
 
 * Запустите Java-приложение командой в терминале:**
 
+**MySQL:**
+
 ```
 java -jar aqa-shop.jar
+```
+
+**PostgreSQL:**
+
+```
+java -jar aqa-shop.jar -Dspring.datasourse.url=jdbc:postgresql://localhost:5432/app
 ```
 
 **3. Открытие в браузере**
@@ -42,8 +50,15 @@ java -jar aqa-shop.jar
 **4. Запуск автотестов и генерация отчета Allure**
 * Запустите автотесты командой в терминале:
 
+**MySQL:**
+
 ```
 ./gradlew clean test
+```
+**PostgreSQL:**
+
+```
+./gradlew clean test -D db.url=jdbc:postgresql://localhost:5432/app
 ```
 
 * Запустите генерацию отчета Allure и их автоматического открытия в браузере командой в терминале:

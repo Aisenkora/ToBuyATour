@@ -20,11 +20,17 @@ public class SQLHelper {
 
     @SneakyThrows
     public static void clearPaymentTable() {
-        val deletePaymentEntity = "DELETE FROM payment_entity ";
+        val deletePaymentEntity = "DELETE FROM payment_entity";
         try (val conn = getConn()) {
             runner.update(conn, deletePaymentEntity);
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+        }
+    }
+
+    @SneakyThrows
+    public static void clearCreditTable() {
+        val deleteCreditEntity = "DELETE FROM credit_request_entity";
+        try (val conn = getConn()) {
+            runner.update(conn, deleteCreditEntity);
         }
     }
 
@@ -32,6 +38,12 @@ public class SQLHelper {
     public static String getPaymentStatus() {
         val statusSQL = "SELECT status FROM payment_entity LIMIT 1";
         return getStatus(statusSQL);
+    }
+
+    @SneakyThrows
+    public static String getCreditRequestStatus() {
+        String query = "SELECT status FROM credit_request_entity LIMIT 1";
+        return getStatus(query);
     }
 
     @SneakyThrows

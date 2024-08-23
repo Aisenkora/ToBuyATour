@@ -1,10 +1,12 @@
 package ru.netology.test;
 
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import ru.netology.data.DataHelper;
 import ru.netology.data.SQLHelper;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.*;
+import ru.netology.page.CreditPage;
 import ru.netology.page.PaymentPage;
 import ru.netology.page.PurchasePage;
 import static com.codeborne.selenide.Selenide.open;
@@ -27,6 +29,7 @@ public class PurchaseTest {
     public void setUp() {
         open("http://localhost:8080");
         SQLHelper.clearPaymentTable();
+        SQLHelper.clearCreditTable();
     }
 
     @Test
@@ -47,10 +50,10 @@ public class PurchaseTest {
         var cardinfo = new DataHelper.CardInfo(getApprovedCardNumber(), getValidMonth(), getValidYear(), getValidHolder(), getValidCVCCVV());
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(cardinfo);
         form.paymentApproved();
-        assertEquals("APPROVED", SQLHelper.getPaymentStatus());
+        assertEquals("APPROVED", SQLHelper.getCreditRequestStatus());
     }
 
     @Test
@@ -71,10 +74,10 @@ public class PurchaseTest {
         var cardinfo = new DataHelper.CardInfo(getDeclinedCardNumber(), getValidMonth(), getValidYear(), getValidHolder(), getValidCVCCVV());
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(cardinfo);
         form.paymentDeclined();
-        assertEquals("DECLINED", SQLHelper.getPaymentStatus());
+        assertEquals("DECLINED", SQLHelper.getCreditRequestStatus());
     }
 
     //Форма "Оплата по карте":
@@ -216,7 +219,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthIfNotExist());
-        form.incorrectCardExpirationDate();
+        form.incorrectMonthVisible();
     }
 
     //несуществующий месяц в пределах граничных значений
@@ -226,7 +229,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthIfNotExistBoundary());
-        form.incorrectCardExpirationDate();
+        form.incorrectMonthVisible();
     }
 
     //месяц равный двум нулям
@@ -326,7 +329,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getLastYear());
-        form.cardExpirationFinishedVisible();
+        form.incorrectYearVisible();
     }
 
     //год на 25 лет превышающий текущий
@@ -336,7 +339,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYear25YearsMore());
-        form.incorrectCardExpirationDate();
+        form.incorrectYearVisible();
     }
 
     //год из 1 цифры
@@ -605,7 +608,7 @@ public class PurchaseTest {
     public void shouldCardNumberOfOneDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberOfOneDigit());
         form.incorrectCardNumberVisible();
     }
@@ -615,7 +618,7 @@ public class PurchaseTest {
     public void shouldCardNumberOfTwoDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberOfTwoDigits());
         form.incorrectCardNumberVisible();
     }
@@ -625,7 +628,7 @@ public class PurchaseTest {
     public void shouldCardNumberOfFiveDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberOfFiveDigits());
         form.incorrectCardNumberVisible();
     }
@@ -635,7 +638,7 @@ public class PurchaseTest {
     public void shouldCardNumberOfFifteenDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberOfFifteenDigits());
         form.incorrectCardNumberVisible();
     }
@@ -645,7 +648,7 @@ public class PurchaseTest {
     public void shouldCardNumberOfSeventeenDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberOfSeventeenDigits());
         form.paymentDeclined();
     }
@@ -655,7 +658,7 @@ public class PurchaseTest {
     public void shouldCardNumberOfEighteenDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberOfEighteenDigits());
         form.paymentDeclined();
     }
@@ -665,7 +668,7 @@ public class PurchaseTest {
     public void shouldCardNumberNotRegisteredByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberNotRegistered());
         form.paymentDeclined();
     }
@@ -675,7 +678,7 @@ public class PurchaseTest {
     public void shouldCardWithSpecialSymbolsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberWithSpecialSymbols());
         form.incorrectCardNumberVisible();
     }
@@ -685,7 +688,7 @@ public class PurchaseTest {
     public void shouldCardWithCyrillicByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberWithCyrillic());
         form.incorrectCardNumberVisible();
     }
@@ -695,7 +698,7 @@ public class PurchaseTest {
     public void shouldCardWithLatinByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberWithLatin());
         form.incorrectCardNumberVisible();
     }
@@ -705,7 +708,7 @@ public class PurchaseTest {
     public void shouldCardWithArabicLigatureByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberWithArabicLigature());
         form.incorrectCardNumberVisible();
     }
@@ -715,7 +718,7 @@ public class PurchaseTest {
     public void shouldCardWithHieroglyphsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberWithHieroglyphs());
         form.incorrectCardNumberVisible();
     }
@@ -725,7 +728,7 @@ public class PurchaseTest {
     public void shouldCardIfEmptyByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCardNumberIfEmpty());
         form.incorrectCardNumberVisible();
     }
@@ -735,9 +738,9 @@ public class PurchaseTest {
     public void shouldMonthIfNotExistByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthIfNotExist());
-        form.incorrectCardExpirationDate();
+        form.incorrectMonthVisible();
     }
 
     //несуществующий месяц в пределах граничных значений
@@ -745,9 +748,9 @@ public class PurchaseTest {
     public void shouldMonthIfNotExistBoundaryByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthIfNotExistBoundary());
-        form.incorrectCardExpirationDate();
+        form.incorrectMonthVisible();
     }
 
     //месяц равный двум нулям
@@ -755,7 +758,7 @@ public class PurchaseTest {
     public void shouldMonthDoubleZeroByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthDoubleZero());
         form.incorrectMonthVisible();
     }
@@ -765,7 +768,7 @@ public class PurchaseTest {
     public void shouldMonthOfThreeDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthOfThreeDigits());
         form.incorrectMonthVisible();
     }
@@ -775,7 +778,7 @@ public class PurchaseTest {
     public void shouldMonthOfOneDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthOfOneDigit());
         form.incorrectMonthVisible();
     }
@@ -785,7 +788,7 @@ public class PurchaseTest {
     public void shouldMonthWithSpecialSymbolsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithSpecialSymbols());
         form.incorrectMonthVisible();
     }
@@ -795,7 +798,7 @@ public class PurchaseTest {
     public void shouldMonthWithCyrillicByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithCyrillic());
         form.incorrectMonthVisible();
     }
@@ -805,7 +808,7 @@ public class PurchaseTest {
     public void shouldMonthWithLatinByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithLatin());
         form.incorrectMonthVisible();
     }
@@ -815,7 +818,7 @@ public class PurchaseTest {
     public void shouldMonthWithArabicLigatureByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithArabicLigature());
         form.incorrectMonthVisible();
     }
@@ -825,7 +828,7 @@ public class PurchaseTest {
     public void shouldMonthWithHieroglyphsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithHieroglyphs());
         form.incorrectMonthVisible();
     }
@@ -835,7 +838,7 @@ public class PurchaseTest {
     public void shouldMonthIfEmptyByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getMonthIfEmpty());
         form.incorrectMonthVisible();
     }
@@ -845,9 +848,9 @@ public class PurchaseTest {
     public void shouldLastYearByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getLastYear());
-        form.cardExpirationFinishedVisible();
+        form.incorrectYearVisible();
     }
 
     //год на 25 лет превышающий текущий
@@ -855,9 +858,9 @@ public class PurchaseTest {
     public void shouldYear25YearsMoreByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYear25YearsMore());
-        form.incorrectCardExpirationDate();
+        form.incorrectYearVisible();
     }
 
     //год из 1 цифры
@@ -865,7 +868,7 @@ public class PurchaseTest {
     public void shouldYearOfOneDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearOfOneDigit());
         form.incorrectYearVisible();
     }
@@ -875,7 +878,7 @@ public class PurchaseTest {
     public void shouldYearOfThreeDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearOfThreeDigits());
         form.incorrectYearVisible();
     }
@@ -885,7 +888,7 @@ public class PurchaseTest {
     public void shouldYearIfZeroByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearIfZero());
         form.incorrectYearVisible();
     }
@@ -895,7 +898,7 @@ public class PurchaseTest {
     public void shouldYearWithSpecialSymbolsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithSpecialSymbols());
         form.incorrectYearVisible();
     }
@@ -905,7 +908,7 @@ public class PurchaseTest {
     public void shouldYearWithCyrillicByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithCyrillic());
         form.incorrectYearVisible();
     }
@@ -915,7 +918,7 @@ public class PurchaseTest {
     public void shouldYearWithLatinByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithLatin());
         form.incorrectYearVisible();
     }
@@ -925,7 +928,7 @@ public class PurchaseTest {
     public void shouldYearWithArabicLigatureByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithArabicLigature());
         form.incorrectYearVisible();
     }
@@ -935,7 +938,7 @@ public class PurchaseTest {
     public void shouldYearWithHieroglyphsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithHieroglyphs());
         form.incorrectYearVisible();
     }
@@ -945,7 +948,7 @@ public class PurchaseTest {
     public void shouldYearIfEmptyByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getYearIfEmpty());
         form.incorrectYearVisible();
     }
@@ -955,7 +958,7 @@ public class PurchaseTest {
     public void shouldHolderOfOneLetterByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getHolderOfOneLetter());
         form.incorrectHolderVisible();
     }
@@ -965,7 +968,7 @@ public class PurchaseTest {
     public void shouldHolderOfSixtyLettersByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getHolderOfSixtyLetters());
         form.incorrectHolderVisible();
     }
@@ -975,7 +978,7 @@ public class PurchaseTest {
     public void shouldHolderWithCyrillicByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getHolderWithCyrillic());
         form.incorrectHolderVisible();
     }
@@ -985,7 +988,7 @@ public class PurchaseTest {
     public void shouldHolderWithDigitsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getHolderWithDigits());
         form.incorrectHolderVisible();
     }
@@ -995,7 +998,7 @@ public class PurchaseTest {
     public void shouldHolderSpecialSymbolsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getHolderWithSpecialSymbols());
         form.incorrectHolderVisible();
     }
@@ -1005,7 +1008,7 @@ public class PurchaseTest {
     public void shouldHolderIfEmptyByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getHolderIfEmpty());
         form.incorrectHolderVisible();
     }
@@ -1015,7 +1018,7 @@ public class PurchaseTest {
     public void shouldCVCCVVOnOneDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVOnOneDigit());
         form.incorrectCodeVisible();
     }
@@ -1025,7 +1028,7 @@ public class PurchaseTest {
     public void shouldCVCCVVOnTwoDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVOnTwoDigits());
         form.incorrectCodeVisible();
     }
@@ -1035,7 +1038,7 @@ public class PurchaseTest {
     public void shouldCVCCVVOnFourDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVOnFourDigits());
         form.incorrectCodeVisible();
     }
@@ -1045,7 +1048,7 @@ public class PurchaseTest {
     public void shouldCVCCVVOnFiveDigitByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVOnFiveDigits());
         form.incorrectCodeVisible();
     }
@@ -1055,7 +1058,7 @@ public class PurchaseTest {
     public void shouldCVCCVVWithSpecialSymbolsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVWithSpecialSymbols());
         form.incorrectCodeVisible();
     }
@@ -1065,7 +1068,7 @@ public class PurchaseTest {
     public void shouldCVCCVVWithCyrillicByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVWithCyrillic());
         form.incorrectCodeVisible();
     }
@@ -1075,7 +1078,7 @@ public class PurchaseTest {
     public void shouldCVCCVVWithLatinByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVWithLatin());
         form.incorrectCodeVisible();
     }
@@ -1085,7 +1088,7 @@ public class PurchaseTest {
     public void shouldCVCCVVWithArabicLigatureByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVWithArabicLigature());
         form.incorrectCodeVisible();
     }
@@ -1095,7 +1098,7 @@ public class PurchaseTest {
     public void shouldCVCCVVWithHieroglyphsByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVWithHieroglyphs());
         form.incorrectCodeVisible();
     }
@@ -1105,7 +1108,7 @@ public class PurchaseTest {
     public void shouldCVCCVVIfEmptyByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.completedForm(DataHelper.getCVCCVVIfEmpty());
         form.incorrectCodeVisible();
     }
@@ -1115,7 +1118,7 @@ public class PurchaseTest {
     void shouldFormIfEmptyByCredit() {
         var purchasepage = new PurchasePage();
         purchasepage.buyByCreditCard();
-        var form = new PaymentPage();
+        var form = new CreditPage();
         form.emptyForm();
     }
 }

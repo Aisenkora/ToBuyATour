@@ -35,7 +35,7 @@ public class DataHelper {
     }
 
     public static String getValidCVCCVV() {
-        int result = (int)(Math.random() * 999) + 1;
+        int result = (int) (Math.random() * 999) + 1;
         return String.format("%03d", result);
     }
 
