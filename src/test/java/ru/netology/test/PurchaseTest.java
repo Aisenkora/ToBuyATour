@@ -9,6 +9,7 @@ import org.junit.jupiter.api.*;
 import ru.netology.page.CreditPage;
 import ru.netology.page.PaymentPage;
 import ru.netology.page.PurchasePage;
+
 import static com.codeborne.selenide.Selenide.open;
 import static ru.netology.data.DataHelper.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -219,7 +220,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthIfNotExist());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверно указан срок действия карты");
     }
 
     //несуществующий месяц в пределах граничных значений
@@ -229,7 +230,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthIfNotExistBoundary());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверно указан срок действия карты");
     }
 
     //месяц равный двум нулям
@@ -239,7 +240,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthDoubleZero());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц из 3 цифр
@@ -249,7 +250,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthOfThreeDigits());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц из 1 цифры
@@ -259,7 +260,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthOfOneDigit());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц, с использованием специальных символов
@@ -269,7 +270,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthWithSpecialSymbols());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц кириллицей
@@ -279,7 +280,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthWithCyrillic());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц латиницей
@@ -289,7 +290,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthWithLatin());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц арабской вязью
@@ -299,7 +300,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthWithArabicLigature());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц иероглифами
@@ -309,7 +310,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthWithHieroglyphs());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //не заполнение месяца
@@ -319,7 +320,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getMonthIfEmpty());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //прошедший год
@@ -329,7 +330,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getLastYear());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Истёк срок действия карты");
     }
 
     //год на 25 лет превышающий текущий
@@ -339,7 +340,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYear25YearsMore());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверно указан срок действия карты");
     }
 
     //год из 1 цифры
@@ -349,7 +350,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearOfOneDigit());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год из 3 цифр
@@ -359,7 +360,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearOfThreeDigits());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год со значением равным нулю
@@ -369,7 +370,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearIfZero());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год с использованием специальных символов
@@ -379,7 +380,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearWithSpecialSymbols());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год кириллицей
@@ -389,7 +390,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearWithCyrillic());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год латиницей
@@ -399,7 +400,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearWithLatin());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год арабской вязью
@@ -409,7 +410,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearWithArabicLigature());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год иероглифами
@@ -419,7 +420,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearWithHieroglyphs());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //не заполнение поле "Год"
@@ -429,7 +430,7 @@ public class PurchaseTest {
         purchasepage.buyByCard();
         var form = new PaymentPage();
         form.completedForm(DataHelper.getYearIfEmpty());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //поле "Владелец", состоящее из 1 буквы
@@ -740,7 +741,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthIfNotExist());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверно указан срок действия карты");
     }
 
     //несуществующий месяц в пределах граничных значений
@@ -750,7 +751,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthIfNotExistBoundary());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверно указан срок действия карты");
     }
 
     //месяц равный двум нулям
@@ -760,7 +761,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthDoubleZero());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц из 3 цифр
@@ -770,7 +771,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthOfThreeDigits());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц из 1 цифры
@@ -780,7 +781,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthOfOneDigit());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц, с использованием специальных символов
@@ -790,7 +791,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithSpecialSymbols());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц кириллицей
@@ -800,7 +801,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithCyrillic());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц латиницей
@@ -810,7 +811,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithLatin());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц арабской вязью
@@ -820,7 +821,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithArabicLigature());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //месяц иероглифами
@@ -830,7 +831,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthWithHieroglyphs());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //не заполнение месяца
@@ -840,7 +841,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getMonthIfEmpty());
-        form.incorrectMonthVisible();
+        form.incorrectMonthVisible("Неверный формат");
     }
 
     //прошедший год
@@ -850,7 +851,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getLastYear());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Истёк срок действия карты");
     }
 
     //год на 25 лет превышающий текущий
@@ -860,7 +861,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYear25YearsMore());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверно указан срок действия карты");
     }
 
     //год из 1 цифры
@@ -870,7 +871,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearOfOneDigit());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год из 3 цифр
@@ -880,7 +881,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearOfThreeDigits());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год со значением равным нулю
@@ -890,7 +891,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearIfZero());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год с использованием специальных символов
@@ -900,7 +901,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithSpecialSymbols());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год кириллицей
@@ -910,7 +911,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithCyrillic());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год латиницей
@@ -920,7 +921,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithLatin());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год арабской вязью
@@ -930,7 +931,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithArabicLigature());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //год иероглифами
@@ -940,7 +941,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearWithHieroglyphs());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //не заполнение поле "Год"
@@ -950,7 +951,7 @@ public class PurchaseTest {
         purchasepage.buyByCreditCard();
         var form = new CreditPage();
         form.completedForm(DataHelper.getYearIfEmpty());
-        form.incorrectYearVisible();
+        form.incorrectYearVisible("Неверный формат");
     }
 
     //поле "Владелец", состоящее из 1 буквы

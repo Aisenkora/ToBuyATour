@@ -3,7 +3,9 @@ package ru.netology.page;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import ru.netology.data.DataHelper;
+
 import java.time.Duration;
+
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byCssSelector;
@@ -41,11 +43,11 @@ public class PaymentPage {
 
     public void emptyForm() {
         button.click();
-        incorrectCardNumber.shouldBe(visible).shouldHave(text("Неверный формат"));
-        incorrectMonth.shouldBe(visible).shouldHave(text("Неверный формат"));
-        incorrectYear.shouldBe(visible).shouldHave(text("Неверный формат"));
-        incorrectHolder.shouldBe(visible).shouldHave(text("Поле обязательно для заполнения"));
-        incorrectCode.shouldBe(visible).shouldHave(text("Неверный формат"));
+        incorrectCardNumberVisible();
+        incorrectMonthVisible("Неверный формат");
+        incorrectYearVisible("Неверный формат");
+        incorrectHolderVisible();
+        incorrectCodeVisible();
     }
 
     public void paymentApproved() {
@@ -65,24 +67,14 @@ public class PaymentPage {
                 .shouldHave(text("Неверный формат"));
     }
 
-    public void incorrectMonthVisible() {
+    public void incorrectMonthVisible(String expectedText) {
         incorrectMonth.shouldBe(Condition.visible)
-                .shouldHave(Condition.or(
-                        "Месяц",
-                        Condition.text("Неверный формат"),
-                        Condition.text("Истёк срок действия карты"),
-                        Condition.text("Неверно указан срок действия карты")
-                ));
+                .shouldHave(Condition.text(expectedText));
     }
 
-    public void incorrectYearVisible() {
+    public void incorrectYearVisible(String expectedText) {
         incorrectYear.shouldBe(Condition.visible)
-                .shouldHave(Condition.or(
-                        "Год",
-                        Condition.text("Неверный формат"),
-                        Condition.text("Истёк срок действия карты"),
-                        Condition.text("Неверно указан срок действия карты")
-                ));
+                .shouldHave(Condition.text(expectedText));
     }
 
     public void incorrectHolderVisible() {
