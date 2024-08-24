@@ -21,7 +21,7 @@
 * Успешно пройденных: 82 теста (75,92%);
 * Завершенных с ошибками: 26 тестов (24,08%).
 
-[Allure.png](![Allure.png](Allure.png))
+[Allure.png](https://github.com/Aisenkora/ToBuyATour/blob/main/docs/Allure.png)
 
 ## Общие рекомендации:
 * Исправить обнаруженные дефекты, в соответствии с заведенными [Issues](https://github.com/Aisenkora/ToBuyATour/issues);
